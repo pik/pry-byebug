@@ -10,15 +10,15 @@ module PryByebug
     include Helpers::Breakpoints
     include Helpers::Multiline
 
-    match 'break'
+    match 'brk'
     group 'Byebug'
     description 'Set or edit a breakpoint.'
 
     banner <<-BANNER
-      Usage:   break <METHOD | FILE:LINE | LINE> [if CONDITION]
-               break --condition N [CONDITION]
-               break [--show | --delete | --enable | --disable] N
-               break [--delete-all | --disable-all]
+      Usage:   brk <METHOD | FILE:LINE | LINE> [if CONDITION]
+               brk --condition N [CONDITION]
+               brk [--show | --delete | --enable | --disable] N
+               brk [--delete-all | --disable-all]
                break
       Aliases: breakpoint
 
@@ -29,26 +29,26 @@ module PryByebug
 
       Examples:
 
-        break SomeClass#run         Break at the start of `SomeClass#run`.
-        break Foo#bar if baz?       Break at `Foo#bar` only if `baz?`.
-        break app/models/user.rb:15 Break at line 15 in user.rb.
-        break 14                    Break at line 14 in the current file.
+        brk SomeClass#run         Break at the start of `SomeClass#run`.
+        brk Foo#bar if baz?       Break at `Foo#bar` only if `baz?`.
+        brk app/models/user.rb:15 Break at line 15 in user.rb.
+        brk 14                    Break at line 14 in the current file.
 
-        break --condition 4 x > 2   Add/change condition on breakpoint #4.
-        break --condition 3         Remove the condition on breakpoint #3.
+        brk --condition 4 x > 2   Add/change condition on brk #4.
+        brk --condition 3         Remove the condition on brk #3.
 
-        break --delete 5            Delete breakpoint #5.
-        break --disable-all         Disable all breakpoints.
+        brk --delete 5            Delete brk #5.
+        brk --disable-all         Disable all breakpoints.
 
-        break --show 2              Show details about breakpoint #2.
-        break                       List all breakpoints.
+        brk --show 2              Show details about brk #2.
+        brk                       List all breakpoints.
     BANNER
 
     def options(opt)
       defaults = { argument: true, as: Integer }
 
       opt.on :c, :condition, 'Change condition of a breakpoint.', defaults
-      opt.on :s, :show, 'Show breakpoint details and source.', defaults
+      opt.on :s, :show, 'Show brk details and source.', defaults
       opt.on :D, :delete, 'Delete a breakpoint.', defaults
       opt.on :d, :disable, 'Disable a breakpoint.', defaults
       opt.on :e, :enable, 'Enable a disabled breakpoint.', defaults
@@ -64,7 +64,7 @@ module PryByebug
       option, = opts.to_hash.find { |key, _value| opts.present?(key) }
       return send(option_to_method(option)) if option
 
-      return new_breakpoint unless args.empty?
+      return new_brk unless args.empty?
 
       print_all
     end
@@ -132,4 +132,3 @@ module PryByebug
 end
 
 Pry::Commands.add_command(PryByebug::BreakCommand)
-Pry::Commands.alias_command 'breakpoint', 'break'
